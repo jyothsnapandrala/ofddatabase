@@ -1,3 +1,0 @@
-FROM postgres
-ENV POSTGRES_DB=ofddb
-ENV POSTGRES_PASSWORD=mani@445
