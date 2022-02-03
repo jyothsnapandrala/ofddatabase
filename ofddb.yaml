@@ -1,0 +1,40 @@
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "ofddb"
+  namespace: "default"
+  labels:
+    app: "ofddb"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "ofddb"
+  template:
+    metadata:
+      labels:
+        app: "ofddb"
+    spec:
+      containers:
+      - name: "ofddatabase-sha256-1"
+        image: "gcr.io/charged-ground-326209/github.com/jyothsnapandrala/ofddatabase@sha256:e4d82e2e9b416defacc845061d23c457f9cc5190b892b85667627017898aaf79"
+---
+apiVersion: "autoscaling/v2beta1"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "ofddb-hpa-eken"
+  namespace: "default"
+  labels:
+    app: "ofddb"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "ofddb"
+    apiVersion: "apps/v1"
+  minReplicas: 1
+ maxReplicas: 5
+  metrics:
+  - type: "Resource"
+    resource:
+      name: "cpu"
+      targetAverageUtilization: 80
